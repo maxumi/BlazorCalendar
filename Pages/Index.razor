@@ -1,0 +1,38 @@
+﻿@page "/"
+
+@using System.Net.Http
+@using Newtonsoft.Json
+@using System.Collections.Generic
+
+<h3>Holiday List</h3>
+<h2>Only takes holidays from from 2022</h2>
+<div class="form-group">
+    <label for="dateInput">Enter a date (e.g., "12-09-2022""):</label>
+    <input type="text" id="dateInput" class="form-control" @bind="selectedDate" placeholder="dd-MM-yyyy">
+</div>
+
+@if (!string.IsNullOrWhiteSpace(selectedDate))
+{
+    <h4>Holidays for the week of @selectedDate</h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Holiday?</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var Weekday in GetWeekDays())
+            {
+                <tr>
+                    <td>@Weekday.Date?.ToString("dd-MM-yyyy")</td>
+                    <td>@Weekday.Name</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>Enter a valid date to view holidays for the week.</p>
+}
