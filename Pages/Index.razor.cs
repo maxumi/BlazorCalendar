@@ -19,12 +19,13 @@ using Newtonsoft.Json.Linq;
 using System.Xml.Linq;
 using Microsoft.Data.SqlClient;
 using System.Globalization;
+using BlazorCalendar.Data;
 
 namespace BlazorCalendar.Pages
 {
     public partial class Index
     {
-        static public string apiKey = "FAKEKEY";
+        static public string apiKey = "FakeKey";
         static public string country = "DK";
         static int year = 2022;
         static string BaseApiUrl = $"https://holidayapi.com/v1/holidays?key={apiKey}&country={country}&year={year}";
@@ -35,23 +36,7 @@ namespace BlazorCalendar.Pages
         private string NewBirthdayName = "";
         private string NewBirthdayDate = "";
 
-
-
-
-        public class Holiday
-        {
-            public string? Name { get; set; }
-            public DateTime? Date { get; set; }
-            public string MonthYear => Date?.ToString("MMMM-yyyy", CultureInfo.InvariantCulture) ?? "";
-
-        }
         public List<Holiday>? holidays { get; set; }
-
-        public class Weekday
-        {
-            public DateTime? Date { get; set; }
-            public string? Name { get; set; }
-        }
         // Changes the names from english to danish
         private Dictionary<string, string> ChangeHolidayName = new Dictionary<string, string>
         {
@@ -82,6 +67,7 @@ namespace BlazorCalendar.Pages
             { "New Year's Eve", "Nytårsaften" }
         };
         public Dictionary<string, List<Holiday>> GroupedHolidays { get; set; } = new Dictionary<string, List<Holiday>>();
+
         string GetTranslatedHolidayName(string englishName)
         {
             if (ChangeHolidayName.ContainsKey(englishName))
@@ -96,16 +82,17 @@ namespace BlazorCalendar.Pages
             // Create a method to get the holidays from the API
             holidays = await GetHolidaysAsync();
 
-            //When not using sql, comment this code
-            //AddBirthdaysFromSQL();
+
+            Crud crud = new Crud();
+            crud.Readrow(holidays);
 
             //This is for displaying all holidays.
             //They create a dictinary with each month being a key and a list for that month being within that
             //So there now exists 12 lists for all months showing holidays.
             GroupedHolidays = holidays
-                .GroupBy(h => h.MonthYear)
-                .OrderBy(g => DateTime.ParseExact(g.Key, "MMMM-yyyy", CultureInfo.InvariantCulture))
-                .ToDictionary(g => g.Key, g => g.ToList());
+            .GroupBy(h => h.MonthYear)
+            .OrderBy(g => DateTime.ParseExact(g.Key, "MMMM-yyyy", CultureInfo.InvariantCulture))
+            .ToDictionary(g => g.Key, g => g.ToList());
 
 
             //New Data could put them out of order so these sorts the lists within the dictonary's value lists
@@ -211,100 +198,11 @@ namespace BlazorCalendar.Pages
             }
         }
 
-        public void IfBirthDayExists(string? name, DateTime? date)
-        {
-            bool IfExists = false;
-            foreach (var holiday in holidays)
-            {
-                if (holiday.Name == name)
-                {
-                    IfExists = true;
-                }
-                else if (holiday.Date == date)
-                {
-                    IfExists = true;
-                }
-            }
-            if (!IfExists)
-            {
-                holidays.Add(new Holiday { Name = name, Date = date });
-            }
-        }
-
-
-        public void AddBirthdaysFromSQL()
-        {
-            Console.WriteLine("Hello, World!");
-            var builder = new SqlConnectionStringBuilder();
-
-            // Set the necessary properties for your SQL Server connection
-            builder.DataSource = "192.168.23.202,1433"; // Replace with your SQL Server instance name or IP address.
-            builder.InitialCatalog = "BirthdayDB"; // Replace with your database name.
-            builder.UserID = "max"; // Replace with your SQL Server username.
-            builder.Password = "Passw0rd"; // Replace with your SQL Server password (if any).
-            builder.Encrypt = false; //This is needed or else the it will create an error form connection.
-
-
-            // Convert the builder to a connection string
-            string connectionString = builder.ToString();
-            Console.WriteLine(connectionString);
-
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                connection.Open();
-
-                string sqlQuery = "SELECT bname, bdate FROM birthdayDB.dbo.Birthday";
-
-                using (SqlCommand command = new SqlCommand(sqlQuery, connection))
-                {
-                    using (SqlDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            string? name = reader["bname"] as string;
-                            DateTime? date = reader["bdate"] as DateTime?;
-
-                            IfBirthDayExists(name, date);
-
-                            Console.WriteLine($"Name: {name}, Date: {date}");
-                        }
-                    }
-                }
-            }
-        }
-
         public void AddBirthday()
         {
-            if (NewBirthdayDate != null || NewBirthdayName != null)
-            {
-                if (DateTime.TryParse(NewBirthdayDate, out DateTime BirthDate))
-                {
-                    var builder = new SqlConnectionStringBuilder();
-
-                    // Set the necessary properties for your SQL Server connection
-                    builder.DataSource = "192.168.23.202,1433"; // Replace with your SQL Server instance name or IP address.
-                    builder.InitialCatalog = "BirthdayDB"; // Replace with your database name.
-                    builder.UserID = "max"; // Replace with your SQL Server username.
-                    builder.Password = "Passw0rd"; // Replace with your SQL Server password (if any).
-                    builder.Encrypt = false; // This is needed or else the it will create an error from the connection.
-                    string connectionString = builder.ToString();
-
-                    using (SqlConnection connection = new SqlConnection(connectionString))
-                    {
-                        connection.Open();
-                        // Use parameterized query to avoid SQL injection and properly format string values.
-                        string sqlQuery = "INSERT INTO Birthday(bname, bdate) VALUES(@Name, @Date)";
-                        using (SqlCommand command = new SqlCommand(sqlQuery, connection))
-                        {
-                            command.Parameters.AddWithValue("@Name", NewBirthdayName);
-                            command.Parameters.AddWithValue("@Date", BirthDate);
-                            command.ExecuteNonQuery();
-                        }
-                    }
-                }
-            }
+            Crud crud = new Crud();
+            crud.AddRow(NewBirthdayName,NewBirthdayDate);
         }
-
-
+        
     }
 }
