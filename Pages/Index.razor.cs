@@ -25,7 +25,7 @@ namespace BlazorCalendar.Pages
 {
     public partial class Index
     {
-        static public string apiKey = "FakeKey";
+        static public string apiKey = "4e59f75f-10b6-47fa-86e2-4d0d911c9385";
         static public string country = "DK";
         static int year = 2022;
         static string BaseApiUrl = $"https://holidayapi.com/v1/holidays?key={apiKey}&country={country}&year={year}";
@@ -33,10 +33,12 @@ namespace BlazorCalendar.Pages
         // The selected date from the calendar
         private string selectedDate = "";
 
+        public bool Loading = true;
+
         private string NewBirthdayName = "";
         private string NewBirthdayDate = "";
 
-        public List<Holiday>? holidays { get; set; }
+        public List<Holiday>? holidays { get; set; } = new();
         // Changes the names from english to danish
         private Dictionary<string, string> ChangeHolidayName = new Dictionary<string, string>
         {
@@ -84,7 +86,7 @@ namespace BlazorCalendar.Pages
 
 
             Crud crud = new Crud();
-            crud.Readrow(holidays);
+            crud.Read(holidays);
 
             //This is for displaying all holidays.
             //They create a dictinary with each month being a key and a list for that month being within that
@@ -100,6 +102,7 @@ namespace BlazorCalendar.Pages
             {
                 GroupedHolidays[monthYear] = GroupedHolidays[monthYear].OrderBy(h => h.Date).ToList();
             }
+            Loading = false;
 
         }
 
@@ -201,7 +204,7 @@ namespace BlazorCalendar.Pages
         public void AddBirthday()
         {
             Crud crud = new Crud();
-            crud.AddRow(NewBirthdayName,NewBirthdayDate);
+            crud.Create(NewBirthdayName,NewBirthdayDate);
         }
         
     }

@@ -11,83 +11,88 @@
     <input type="text" id="dateInput" class="form-control" @bind="selectedDate" placeholder="dd-MM-yyyy">
 </div>
 
-@if (!string.IsNullOrWhiteSpace(selectedDate))
+
+@if (!Loading)
 {
-    <h4>Holidays for the week of @selectedDate</h4>
-    <table class="table">
+
+    @if (!string.IsNullOrWhiteSpace(selectedDate))
+    {
+        <h4>Holidays for the week of @selectedDate</h4>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Holiday?</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var Weekday in GetWeekDays())
+                {
+                    <tr>
+                        <td>@Weekday.Date?.ToString("dd-MM-yyyy")</td>
+                        <td>@Weekday.Name</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>Enter a valid date to view holidays for the week.</p>
+    }
+
+
+    <h3>Add new birthday</h3>
+    <div class="form-group">
+        <label for="nameInput">Enter a name:</label>
+        <input type="text" id="nameInput" class="form-control" @bind="NewBirthdayName">
+    </div>
+
+    <div class="form-group">
+        <label for="dateInput">Enter a date (e.g., "12-09-2022"): </label>
+        <input type="text" id="dateInput" class="form-control" @bind="NewBirthdayDate" placeholder="dd-MM-yyyy">
+    </div>
+
+    <button class="btn btn-primary" @onclick="AddBirthday">Add Birthday</button>
+    <h4>Holidays by Month</h4>
+    <table>
         <thead>
             <tr>
-                <th>Date</th>
-                <th>Holiday?</th>
+                <th>Month</th>
+                <th>Holidays</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var Weekday in GetWeekDays())
+            @foreach (var group in GroupedHolidays)
             {
                 <tr>
-                    <td>@Weekday.Date?.ToString("dd-MM-yyyy")</td>
-                    <td>@Weekday.Name</td>
+                    <td>@group.Key</td>
+                    <td>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Name</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var holiday in group.Value) 
+                                {
+                                    <tr>
+                                        <td>@holiday.Date?.ToShortDateString()</td>
+                                        <td>@GetTranslatedHolidayName(holiday.Name)</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </td>
                 </tr>
             }
         </tbody>
-    </table>
+        </table>
 }
 else
 {
-    <p>Enter a valid date to view holidays for the week.</p>
+    <h3>Loading</h3>
 }
-
-
-<h3>Add new birthday</h3>
-<div class="form-group">
-    <label for="nameInput">Enter a name:</label>
-    <input type="text" id="nameInput" class="form-control" @bind="NewBirthdayName">
-</div>
-
-<div class="form-group">
-    <label for="dateInput">Enter a date (e.g., "12-09-2022"): </label>
-    <input type="text" id="dateInput" class="form-control" @bind="NewBirthdayDate" placeholder="dd-MM-yyyy">
-</div>
-
-<button class="btn btn-primary" @onclick="AddBirthday">Add Birthday</button>
-
-<!-- Add a new table below -->
-<!-- Add a new table below -->
-<h4>Holidays by Month</h4>
-<table>
-    <thead>
-        <tr>
-            <th>Month</th>
-            <th>Holidays</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var group in GroupedHolidays)
-        {
-            <tr>
-                <td>@group.Key</td>
-                <td>
-                    <!-- Use a nested table to display the list of holidays -->
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Name</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var holiday in group.Value) 
-                            {
-                                <tr>
-                                    <td>@holiday.Date?.ToShortDateString()</td>
-                                    <td>@GetTranslatedHolidayName(holiday.Name)</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
 
