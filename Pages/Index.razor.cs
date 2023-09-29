@@ -35,6 +35,9 @@ namespace BlazorCalendar.Pages
 
         public bool Loading = true;
 
+        //This signals weither its the Normal or enity framework way of using CRUDS
+        public static int RadioSqlWay { get; set; } = 0;
+
         private string NewBirthdayName = "";
         private string NewBirthdayDate = "";
 
@@ -85,7 +88,7 @@ namespace BlazorCalendar.Pages
             holidays = await GetHolidaysAsync();
 
 
-            Crud crud = new Crud();
+            Crud crud = new Crud(RadioSqlWay);
             crud.Read(holidays);
 
             //This is for displaying all holidays.
@@ -203,9 +206,17 @@ namespace BlazorCalendar.Pages
 
         public void AddBirthday()
         {
-            Crud crud = new Crud();
+            Crud crud = new Crud(RadioSqlWay);
             crud.Create(NewBirthdayName,NewBirthdayDate);
         }
-        
+
+
+        public void SetPropertyValue(int number)
+        {
+            RadioSqlWay = number;
+        }
+
+
+
     }
 }
