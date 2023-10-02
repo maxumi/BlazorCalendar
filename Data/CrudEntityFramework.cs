@@ -48,13 +48,12 @@ namespace BlazorCalendar.Data
                 }
             }
         }
-
-        public void Delete()
+        public void Update(string Name, string Date)
         {
             throw new NotImplementedException();
         }
 
-        public void Update()
+        public void Delete(string BirthdayName)
         {
             throw new NotImplementedException();
         }

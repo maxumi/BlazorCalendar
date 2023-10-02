@@ -27,10 +27,12 @@ namespace BlazorCalendar.Pages //Currently a mockup of the update page. It has n
         void DeleteUser()
         {
             FakeCrud crud = new FakeCrud();
-            crud.DeleteSqlUser(SelectedName);
+            crud.Delete(SelectedName);
         }
         void UpdateUserDate()
         {
+            FakeCrud crud = new FakeCrud();
+            crud.Update(UpdatedName,NewDate);
 
         }
     }

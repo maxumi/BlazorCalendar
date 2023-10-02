@@ -19,29 +19,23 @@ namespace BlazorCalendar.Data
         {
             throw new NotImplementedException();
         }
-        public void Update()
+        public void Update(string Name, string Date)
         {
-            throw new NotImplementedException();
-        }
-        public void Delete()
-        {
-            throw new NotImplementedException();
-        }
+            //Update the date of the user inside the list
 
-        public void DeleteSqlUser(string BirthdayName)
+            if (holidays.Exists(x => x.Name == Name))
+            {
+                holidays.Find(x => x.Name == Name).Date = System.DateTime.Parse(Date);
+            }
+        }
+        public void Delete(string BirthdayName)
         {
             //This is a mockup method that is trying to delete a user from the database
-            //This is not possible with the current database setup
-            //This will will have a fake list and remove the user from the list if it exists
-            //This is not a good way to do it, but it is the only way to do it with the current setup
-
             //This is removing the name from the list if it exists.
             if (holidays.Exists(x => x.Name == BirthdayName))
             {
                 holidays.Remove(holidays.Find(x => x.Name == BirthdayName));
             }
-
         }
-
     }
 }
