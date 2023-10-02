@@ -1,0 +1,21 @@
+﻿@page "/UpdateRazor"
+
+
+<div>
+    <h2>Delete Sql User</h2>
+    <label for="Delete">Write the name of the user who you want to delete from the database</label>
+    <input type="text" id="Delete" class="form-control" @bind="SelectedName" placeholder="Max">
+    <button style="margin-top:5px" class="btn btn-primary" @onclick="DeleteUser">Delete User</button>
+
+</div>
+
+<div style="margin-top: 20px">
+    <h2>Change User Date</h2>
+    <label for="nameInput">Update a Users Date<br/>User Name:</label>
+    <input type="text" id="nameInput" class="form-control" @bind="SelectedName" placeholder="Max">
+
+    <label for="dateInput">New Date (yyyy-MM-dd):</label>
+    <input type="text" id="dateInput" class="form-control" @bind="NewDate" placeholder="2022-10-02">
+    <button style="margin-top:5px" class="btn btn-primary" @onclick="UpdateUserDate">Update Date</button>
+</div>
+
