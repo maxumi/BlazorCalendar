@@ -88,9 +88,8 @@ namespace BlazorCalendar.Pages
             holidays = await GetHolidaysAsync();
 
 
-            //This code is for sql, don't uncomment unless you want to use sql
-            //Crud crud = new Crud(RadioSqlWay);
-            //crud.Read(holidays);
+            Crud crud = new Crud(RadioSqlWay);
+            crud.Read(holidays);
 
             //This is for displaying all holidays.
             //They create a dictinary with each month being a key and a list for that month being within that
@@ -207,9 +206,8 @@ namespace BlazorCalendar.Pages
 
         public void AddBirthday()
         {
-            //This code is for sql, don't uncomment unless you want to use sql
-            //Crud crud = new Crud(RadioSqlWay);
-            //crud.Create(NewBirthdayName,NewBirthdayDate);
+            Crud crud = new Crud(RadioSqlWay);
+            crud.Create(NewBirthdayName, NewBirthdayDate);
         }
 
 

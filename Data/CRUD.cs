@@ -9,7 +9,7 @@ namespace BlazorCalendar.Data
         public int SwitchNumber { get; set; }
         public Crud(int switchNumber)
         {
-            this.SwitchNumber = SwitchNumber;
+            this.SwitchNumber = switchNumber;
         }
         //Creates new row of data
         public void Create(string NewBirthdayName, string NewBirthdayDate)
@@ -41,13 +41,33 @@ namespace BlazorCalendar.Data
             }
         }
 
-        public void Update(string Name, string Date)
+        public void Update(string Id, string Date)
         {
-            throw new NotImplementedException();
+            switch (SwitchNumber)
+            {
+                case 0:
+                    CrudEntityFramework crudEntityFramework = new CrudEntityFramework();
+                    crudEntityFramework.Update(Id, Date);
+                    break;
+                case 1:
+                    CrudNormalSQL crudNormalSQL = new CrudNormalSQL();
+                    crudNormalSQL.Update(Id, Date);
+                    break;
+            }
         }
-        public void Delete(string BirthdayName)
+        public void Delete(string BirthDayId)
         {
-            throw new NotImplementedException();
+            switch (SwitchNumber)
+            {
+                case 0:
+                    CrudEntityFramework crudEntityFramework=new CrudEntityFramework();
+                    crudEntityFramework.Delete(BirthDayId);
+                    break;
+                case 1:
+                    CrudNormalSQL crudNormalSQL = new CrudNormalSQL();
+                    crudNormalSQL.Delete(BirthDayId);
+                    break ;
+            }
         }
     }
 }

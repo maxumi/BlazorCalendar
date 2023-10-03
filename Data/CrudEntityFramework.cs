@@ -48,14 +48,40 @@ namespace BlazorCalendar.Data
                 }
             }
         }
-        public void Update(string Name, string Date)
+        public void Update(string ID, string date)
         {
-            throw new NotImplementedException();
+            if (DateTime.TryParse(date, out DateTime parsedDate) && int.TryParse(ID, out int parsedID))
+            {
+                string newFormattedDateString = parsedDate.ToString("yyyy-MM-dd");
+                using (var dbContext = new DataContext())
+                {
+                    var birthdayToUpdate = dbContext.Birthday.FirstOrDefault(b => b.Id == parsedID);
+                    if (birthdayToUpdate != null)
+                    {
+                        birthdayToUpdate.Date = parsedDate;
+                        dbContext.SaveChanges();
+                    }
+                }
+            }
         }
 
-        public void Delete(string BirthdayName)
+
+        public void Delete(string BirthdayId)
         {
-            throw new NotImplementedException();
+            if (int.TryParse(BirthdayId, out int parsedID))
+            {
+                using (var dbContext = new DataContext())
+                {
+                    var DeleteBirthday = dbContext.Birthday.FirstOrDefault(b => b.Id == parsedID);
+
+                    if (DeleteBirthday != null)
+                    {
+                        dbContext.Birthday.Remove(DeleteBirthday); // Remove the entity from the context
+                        dbContext.SaveChanges(); // Save changes to delete the entity from the database
+                    }
+                }
+            }
         }
+
     }
 }

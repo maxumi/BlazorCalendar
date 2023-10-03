@@ -3,16 +3,16 @@
 
 <div>
     <h2>Delete Sql User</h2>
-    <label for="Delete">Write the name of the user who you want to delete from the database</label>
-    <input type="text" id="Delete" class="form-control" @bind="SelectedName" placeholder="Max">
+    <label for="Delete">Write the Id of the user who you want to delete from the database</label>
+    <input type="text" id="Delete" class="form-control" @bind="DeleteID" placeholder="Max">
     <button style="margin-top:5px" class="btn btn-primary" @onclick="DeleteUser">Delete User</button>
 
 </div>
 
 <div style="margin-top: 20px">
     <h2>Change User Date</h2>
-    <label for="nameInput">Update a Users Date<br/>User Name:</label>
-    <input type="text" id="nameInput" class="form-control" @bind="SelectedName" placeholder="Max">
+    <label for="nameInput">Update a Users Date<br/>Id:</label>
+    <input type="text" id="nameInput" class="form-control" @bind="Id" placeholder="1,2,3">
 
     <label for="dateInput">New Date (yyyy-MM-dd):</label>
     <input type="text" id="dateInput" class="form-control" @bind="NewDate" placeholder="2022-10-02">

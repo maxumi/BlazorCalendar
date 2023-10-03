@@ -19,20 +19,20 @@ namespace BlazorCalendar.Pages //Currently a mockup of the update page. It has n
 {
     public partial class UpdateRazor
     {
-        public string SelectedName { get; set; } = "";
+        public string DeleteID { get; set; } = "";
 
         public string NewDate { get; set; } = "";
-        public string UpdatedName { get; set; } = "";   
+        public string Id { get; set; } = "";   
 
         void DeleteUser()
         {
-            FakeCrud crud = new FakeCrud();
-            crud.Delete(SelectedName);
+            Crud crud = new(Index.RadioSqlWay);
+            crud.Delete(DeleteID);
         }
         void UpdateUserDate()
         {
-            FakeCrud crud = new FakeCrud();
-            crud.Update(UpdatedName,NewDate);
+            Crud crud = new(Index.RadioSqlWay);
+            crud.Update(Id, NewDate);
 
         }
     }
